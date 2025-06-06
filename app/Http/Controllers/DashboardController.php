@@ -13,6 +13,6 @@ class DashboardController extends Controller
         // Get orders only for the currently logged-in user
         $orders = Order::where('user_id', Auth::id())->get();
 
-        return view('dashboard.index', compact('orders'));
+        return view('dashboard', compact('orders'));
     }
 }
