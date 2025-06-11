@@ -20,5 +20,4 @@ return new class extends Migration
             $table->dropColumn(['item_id', 'item_type']);
         });
     }
-    
 };

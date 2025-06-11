@@ -12,6 +12,7 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id')->nullable()->after('user_id');
         });
     }
+    
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
