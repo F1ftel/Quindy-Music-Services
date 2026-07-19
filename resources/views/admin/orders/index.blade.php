@@ -59,18 +59,21 @@
             </td>
             <td>
                 {{ match($order->status) {
-        'pending' => 'Pending',
-        'completed' => 'Completed',
-        'in_progress' => 'In Progress',
-        default => ucfirst(str_replace('_', ' ', $order->status))
-    } }}
+                    'pending' => 'Pending',
+                    'completed' => 'Completed',
+                    'in_progress' => 'In Progress',
+                    default => ucfirst(str_replace('_', ' ', $order->status))
+                } }}
             </td>
             <td><a href="{{ $order->google_drive_link }}" target="_blank">View Files</a></td>
             <td>
                 <form method="POST" action="{{ route('admin.orders.update', $order->id) }}">
                     @csrf
                     @method('PATCH')
-                    <select name="status" class="form-select">
+                    
+                    <label for="status-{{ $order->id }}" class="visually-hidden">Change order status</label>
+                    
+                    <select name="status" id="status-{{ $order->id }}" class="form-select">
                         <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="in_progress" {{ $order->status == 'in_progress' ? 'selected' : '' }}>In Progress</option>
                         <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>

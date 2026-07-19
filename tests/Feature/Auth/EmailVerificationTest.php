@@ -21,13 +21,15 @@ test('email can be verified', function () {
     $verificationUrl = URL::temporarySignedRoute(
         'verification.verify',
         now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1($user->email)]
+        ['id' => $user->id, 'hash' => $user->getEmailForVerificationHash()]
     );
 
     $response = $this->actingAs($user)->get($verificationUrl);
 
     Event::assertDispatched(Verified::class);
+    
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+    
     $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
 });
 
@@ -37,7 +39,7 @@ test('email is not verified with invalid hash', function () {
     $verificationUrl = URL::temporarySignedRoute(
         'verification.verify',
         now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1('wrong-email')]
+        ['id' => $user->id, 'hash' => 'invalid-hash-string']
     );
 
     $this->actingAs($user)->get($verificationUrl);

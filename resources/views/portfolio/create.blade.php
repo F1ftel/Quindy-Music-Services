@@ -27,11 +27,11 @@
         </div>
         <div class="mb-3">
             <label for="review" class="form-label">Customer Review (optional)</label>
-            <textarea name="review" class="form-control"></textarea>
+            <textarea name="review" id="review" class="form-control"></textarea>
         </div>
         <div class="mb-3">
             <label for="track_link" class="form-label">SoundCloud Track URL</label>
-            <input type="url" name="track_link" class="form-control" required>
+            <input type="url" name="track_link" id="track_link" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-primary">Save Project</button>
     </form>

@@ -59,7 +59,16 @@
                         </h5>
                         <p class="card-text text-muted">{{ $project->review }}</p>
                         @if($project->track_link)
-                        <div class="ratio ratio-16x9"><iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url={{ urlencode($project->track_link) }}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe></div>
+                        <div class="ratio ratio-16x9">
+                            <iframe
+                                title="SoundCloud audio player for {{ $project->service->name ?? $project->package->name ?? 'project' }}"
+                                width="100%"
+                                height="166"
+                                style="border: 0; overflow: hidden;"
+                                allow="autoplay"
+                                src="https://w.soundcloud.com/player/?url={{ urlencode($project->track_link) }}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
+                            </iframe >
+                        </div>
                         @endif
                     </div>
                 </div>
