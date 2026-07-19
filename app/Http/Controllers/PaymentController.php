@@ -20,7 +20,7 @@ class PaymentController extends Controller
     public function __construct()
     {
         $environment = new SandboxEnvironment(
-            config('services.paypal.client_id'), 
+            config('services.paypal.client_id'),
             config('services.paypal.client_secret')
         );
         $this->client = new PayPalHttpClient($environment);
@@ -51,7 +51,7 @@ class PaymentController extends Controller
 
             $approveLink = collect($response->result->links)->firstWhere('rel', 'approve');
 
-            return $approveLink 
+            return $approveLink
                 ? redirect()->away($approveLink->href)
                 : redirect('/order')->withErrors(['error' => 'Approval URL not found']);
 
