@@ -27,12 +27,12 @@
                 <td>{{ $item->review }}</td>
                 <td>
                     @if($item->track_link)
-                    <iframe 
+                    <iframe
                         title="SoundCloud audio player for {{ $item->service->name ?? $item->package->name ?? 'project' }}"
-                        width="100%" 
-                        height="166" 
-                        style="border: 0; overflow: hidden;" 
-                        allow="autoplay" 
+                        width="100%"
+                        height="166"
+                        style="border: 0; overflow: hidden;"
+                        allow="autoplay"
                         src="https://w.soundcloud.com/player/?url={{ urlencode($item->track_link) }}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
                     </iframe >
                     @endif

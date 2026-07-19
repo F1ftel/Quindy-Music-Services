@@ -4,28 +4,31 @@ use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
 
-test('reset password link screen can be rendered', function () {
-    $response = $this->get('/forgot-password');
+$forgotPasswordRoute = '/forgot-password';
+$profileRoute = '/profile';
+
+test('reset password link screen can be rendered', function () use ($forgotPasswordRoute) {
+    $response = $this->get($forgotPasswordRoute);
 
     $response->assertStatus(200);
 });
 
-test('reset password link can be requested', function () {
+test('reset password link can be requested', function () use ($forgotPasswordRoute) {
     Notification::fake();
 
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
+    $this->post($forgotPasswordRoute, ['email' => $user->email]);
 
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-test('reset password screen can be rendered', function () {
+test('reset password screen can be rendered', function () use ($forgotPasswordRoute) {
     Notification::fake();
 
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
+    $this->post($forgotPasswordRoute, ['email' => $user->email]);
 
     Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
         $response = $this->get('/reset-password/'.$notification->token);
@@ -36,12 +39,12 @@ test('reset password screen can be rendered', function () {
     });
 });
 
-test('password can be reset with valid token', function () {
+test('password can be reset with valid token', function () use ($forgotPasswordRoute) {
     Notification::fake();
 
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
+    $this->post($forgotPasswordRoute, ['email' => $user->email]);
 
     Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
         $response = $this->post('/reset-password', [
