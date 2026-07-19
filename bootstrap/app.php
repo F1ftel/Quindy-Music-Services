@@ -16,5 +16,4 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => IsAdmin::class,
         ]);
     })
-    ->withExceptions(function () {
-    })->create();
+    ->create();

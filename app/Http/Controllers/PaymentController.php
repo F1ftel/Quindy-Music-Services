@@ -19,7 +19,10 @@ class PaymentController extends Controller
 
     public function __construct()
     {
-        $environment = new SandboxEnvironment(env('PAYPAL_CLIENT_ID'), env('PAYPAL_CLIENT_SECRET'));
+        $environment = new SandboxEnvironment(
+            config('services.paypal.client_id'), 
+            config('services.paypal.client_secret')
+        );
         $this->client = new PayPalHttpClient($environment);
     }
 
@@ -46,13 +49,12 @@ class PaymentController extends Controller
                 'google_drive_link' => $googleDriveLink,
             ]);
 
-            foreach ($response->result->links as $link) {
-                if ($link->rel === 'approve') {
-                    return redirect()->away($link->href);
-                }
-            }
+            $approveLink = collect($response->result->links)->firstWhere('rel', 'approve');
 
-            return redirect('/order')->withErrors(['error' => 'Approval URL not found']);
+            return $approveLink 
+                ? redirect()->away($approveLink->href)
+                : redirect('/order')->withErrors(['error' => 'Approval URL not found']);
+
         } catch (HttpException $ex) {
             return redirect()->back()->withErrors(['error' => 'Payment creation failed']);
         }
@@ -98,21 +100,19 @@ class PaymentController extends Controller
 
     private function resolveItem(?string $itemId): array
     {
-        if (!$itemId) {
-            return [null, null];
+        $result = [null, null];
+
+        if ($itemId) {
+            if (str_starts_with($itemId, 'service-')) {
+                $id = (int)str_replace('service-', '', $itemId);
+                $result = ['service', Service::find($id)];
+            } elseif (str_starts_with($itemId, 'package-')) {
+                $id = (int)str_replace('package-', '', $itemId);
+                $result = ['package', Package::find($id)];
+            }
         }
 
-        if (str_starts_with($itemId, 'service-')) {
-            $id = (int)str_replace('service-', '', $itemId);
-            return ['service', Service::find($id)];
-        }
-
-        if (str_starts_with($itemId, 'package-')) {
-            $id = (int)str_replace('package-', '', $itemId);
-            return ['package', Package::find($id)];
-        }
-
-        return [null, null];
+        return $result;
     }
 
     private function buildPayPalOrderRequest(string $price, string $itemName): OrdersCreateRequest
